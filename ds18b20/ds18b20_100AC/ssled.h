@@ -14,6 +14,9 @@
 void LedInit(void);
 void LedClear(void);
 void LedSend(const int s);
+void LedSendChar(const int s);
+void LedSendCharWDot(const int s);
 void LedWrite(char data);
+
 
 #endif // SSLED_H__
