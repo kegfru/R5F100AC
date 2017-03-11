@@ -1,4 +1,4 @@
-#include <iodefine.h>
+п»ї#include <iodefine.h>
 #include <iodefine_ext.h>
 
 // 0x04U - 1 microsec
@@ -13,17 +13,6 @@ unsigned long int PrevCounter = 0;
 // Read
 //	PM1.pm1 |= (1U << 6);	//As input
 //  var = P1.p1 & (1 << 6); //read from port
-
-void DsDelayWoDelay(unsigned int units)
-{
-	unsigned long int counter = units * DELAY_TIMING;
-	
-	while(counter--)
-	{
-		/* Delay Loop	*/
-		asm("nop");
-	}
-}
 
 void DsDelay(unsigned int units)
 {
@@ -63,7 +52,7 @@ void P16Down(void){
 	P1.p1 &=  ~(1U << 6); 	//Disable
 }
 
-/*** Инициализация DS18B20 ***/
+/*** РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ DS18B20 ***/
 unsigned char init_18b20(void) {
 	P16Down();
 	DsDelay(480);
@@ -75,7 +64,7 @@ unsigned char init_18b20(void) {
 	return OK_Flag;
 }
 
-/*** Функция чтения байта из DS18B20 ***/
+/*** Р¤СѓРЅРєС†РёСЏ С‡С‚РµРЅРёСЏ Р±Р°Р№С‚Р° РёР· DS18B20 ***/
 unsigned char read_18b20(void)
 {
 	unsigned char i;   
@@ -99,7 +88,7 @@ unsigned char read_18b20(void)
 	return dat;
 }
 
-/*** функция записи байта в DS18B20 ***/
+/*** С„СѓРЅРєС†РёСЏ Р·Р°РїРёСЃРё Р±Р°Р№С‚Р° РІ DS18B20 ***/
 void write_18b20(unsigned char dat)
 {
 	unsigned char i;   
@@ -123,40 +112,40 @@ void write_18b20(unsigned char dat)
 }
 
 unsigned int old_tempint = 0;
-unsigned int tempint = 0,tempint1,tempint2,tempint3; // переменные для целого значения температуры
-unsigned int temppoint = 0,temppoint1; // переменные для дробного значения температуры
+unsigned int tempint = 0,tempint1,tempint2,tempint3; // РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ С†РµР»РѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РµРјРїРµСЂР°С‚СѓСЂС‹
+unsigned int temppoint = 0,temppoint1; // РїРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ РґСЂРѕР±РЅРѕРіРѕ Р·РЅР°С‡РµРЅРёСЏ С‚РµРјРїРµСЂР°С‚СѓСЂС‹
 
 
 void get_18b20()
 {	
 /*** http://radioparty.ru/prog-avr/program-c/378-lesson2-ds18b20 ***/
 
-	write_18b20(0xCCU);     // проверка кода датчика
-	write_18b20(0x44U);     // запуск температурного преобразования
+	write_18b20(0xCCU);     // РїСЂРѕРІРµСЂРєР° РєРѕРґР° РґР°С‚С‡РёРєР°
+	write_18b20(0x44U);     // Р·Р°РїСѓСЃРє С‚РµРјРїРµСЂР°С‚СѓСЂРЅРѕРіРѕ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ
 	DsDelay(750); 
 	init_18b20();
-	write_18b20(0xCCU);     // проверка кода датчика
-	write_18b20(0xBEU);     // считываем содержимое ОЗУ
+	write_18b20(0xCCU);     // РїСЂРѕРІРµСЂРєР° РєРѕРґР° РґР°С‚С‡РёРєР°
+	write_18b20(0xBEU);     // СЃС‡РёС‚С‹РІР°РµРј СЃРѕРґРµСЂР¶РёРјРѕРµ РћР—РЈ
 
-	Temp_L = read_18b20(); // читаем первые 2 байта блокнота
+	Temp_L = read_18b20(); // С‡РёС‚Р°РµРј РїРµСЂРІС‹Рµ 2 Р±Р°Р№С‚Р° Р±Р»РѕРєРЅРѕС‚Р°
 	Temp_H = read_18b20(); 
 	temp_flag = 1;    
-	if(Temp_H &(1 << 3))   // проверяем бит знака температуры на равенство единице 
+	if(Temp_H &(1 << 3))   // РїСЂРѕРІРµСЂСЏРµРј Р±РёС‚ Р·РЅР°РєР° С‚РµРјРїРµСЂР°С‚СѓСЂС‹ РЅР° СЂР°РІРµРЅСЃС‚РІРѕ РµРґРёРЅРёС†Рµ 
 	{           
 		signed int tmp;
-		temp_flag = 0;      // флаг знака равен 0(минус)
+		temp_flag = 0;      // С„Р»Р°Рі Р·РЅР°РєР° СЂР°РІРµРЅ 0(РјРёРЅСѓСЃ)
 		tmp = (Temp_H << 8) | Temp_L;
 		tmp = -tmp;
 		Temp_L = tmp;
 		Temp_H = tmp >> 8; 
 	} 
 	
-	tempint = ((Temp_H << 4) & 0x70)|(Temp_L >> 4); // вычисляем целое значение температуры
+	tempint = ((Temp_H << 4) & 0x70)|(Temp_L >> 4); // РІС‹С‡РёСЃР»СЏРµРј С†РµР»РѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РµРјРїРµСЂР°С‚СѓСЂС‹
 	tempint1 = tempint % 1000 / 100;  
 	tempint2 = tempint % 100 / 10;  
 	tempint3 = tempint % 10;        
-	temppoint = Temp_L & 0x0F; // вычисляем дробное значение температуры
-	temppoint = temppoint * 625;       // точность температуры 
+	temppoint = Temp_L & 0x0F; // РІС‹С‡РёСЃР»СЏРµРј РґСЂРѕР±РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ С‚РµРјРїРµСЂР°С‚СѓСЂС‹
+	temppoint = temppoint * 625;       // С‚РѕС‡РЅРѕСЃС‚СЊ С‚РµРјРїРµСЂР°С‚СѓСЂС‹ 
 	temppoint1 = temppoint / 1000;        
 	
 //	if(tempint != old_tempint) LedSend(tempint);	
