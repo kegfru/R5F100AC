@@ -22,35 +22,15 @@ void it_handler(void)
 
 void main(void)
 {
-//    LED2_PIN = 0;
-//    LED2 = 0;
-
     MainInit();
 	LedInit();
-	LedSend(1000);
-	init_18b20(); 
-
-	int r = 0;
-	
-//	search_18b20();
-	get_18b20();
-
     for(;;)
     {
-
         if (flag_1hz)
         {
-//			LED2 ^= 1;
 			flag_1hz = 0;
 			init_18b20();
 			get_18b20();
-//			LedSend(9876);
-//			LedSend(r);		
-//			r++;
-//			if (r > 0x43U)
-//			{
-//				r = 0;
-//			}
         }
 		asm("halt");
     }
