@@ -13,9 +13,9 @@ volatile unsigned char led_buffer[13] = {
 224,		// 7
 254,		// 8
 246,		// 9
-1,				// .
-2,				// -
-0				// clear segment
+1,			// .
+2,			// -
+0			// clear segment
 };
 
 void LedInit(void)
@@ -38,30 +38,30 @@ void LedClear(void)
 
 void LedSend(const int s)
 {
-		char i[4] = {
-			12,
-			12,
-			12,
-			12,
-		};
-		i[0] = s  % 10 / 1;
-		if (s>9) { i[1] = s  % 100 / 10; }
-		if (s>99) { i[2] = s  % 1000 / 100; }
-		if (s>999) { i[3] = s / 1000; }
-		LedWrite(led_buffer[i[0]]);
-		LedWrite(led_buffer[i[1]]);
-		LedWrite(led_buffer[i[2]]);
-		LedWrite(led_buffer[i[3]]);
+	char i[4] = {
+		12,
+		12,
+		12,
+		12,
+	};
+	i[0] = s  % 10 / 1;
+	if (s>9) { i[1] = s  % 100 / 10; }
+	if (s>99) { i[2] = s  % 1000 / 100; }
+	if (s>999) { i[3] = s / 1000; }
+	LedWrite(led_buffer[i[0]]);
+	LedWrite(led_buffer[i[1]]);
+	LedWrite(led_buffer[i[2]]);
+	LedWrite(led_buffer[i[3]]);
 }
 
 void LedSendChar(const int s)
 {
-		LedWrite(led_buffer[s]);
+	LedWrite(led_buffer[s]);
 }
 
 void LedSendCharWDot(const int s)
 {
-		LedWrite(led_buffer[s] ^ 0x01);
+	LedWrite(led_buffer[s] ^ 0x01);
 }
 void LedWrite(char data)
 {

@@ -17,7 +17,6 @@ unsigned long int PrevCounter = 0;
 void DsDelay(unsigned int units)
 {
 	unsigned long int counter = units * DELAY_TIMING;
-	
 	while(counter--)
 	{
 		/* Delay Loop	*/
@@ -111,10 +110,8 @@ void write_18b20(unsigned char dat)
 	}   
 }
 
-unsigned int old_tempint = 0;
 unsigned int tempint = 0,tempint1,tempint2,tempint3; // переменные для целого значения температуры
 unsigned int temppoint = 0,temppoint1; // переменные для дробного значения температуры
-
 
 void get_18b20()
 {	
@@ -148,32 +145,29 @@ void get_18b20()
 	temppoint = temppoint * 625;       // точность температуры 
 	temppoint1 = temppoint / 1000;        
 	
-//	if(tempint != old_tempint) LedSend(tempint);	
-//	if(tempint != old_tempint) {
-		LedSendChar(temppoint1);
-		LedSendCharWDot(tempint3);
-		if(tempint2 != 0) 
+	LedSendChar(temppoint1);
+	LedSendCharWDot(tempint3);
+	if(tempint2 != 0) 
+	{
+		LedSendChar(tempint2);
+		if(temp_flag == 0) 
+		{ 
+			LedSendChar(11);
+		} 
+		else 
 		{
-			LedSendChar(tempint2);
-			if(temp_flag == 0) 
-			{ 
-				LedSendChar(11);
-			} else {
-				LedSendChar(12);
-			}
-		} else {
-			if(temp_flag == 0) 
-			{ 
-				LedSendChar(11);
-				LedSendChar(12);
-			} else {
-				LedSendChar(12);
-				LedSendChar(12);
-			}
+			LedSendChar(12);
 		}
-		
-//	}
-	
-	old_tempint = tempint;
-	
+	} 
+	else 
+	{
+		if(temp_flag == 0) 
+		{ 
+			LedSendChar(11);
+			LedSendChar(12);
+		} else {
+			LedSendChar(12);
+			LedSendChar(12);
+		}
+	}
 }
